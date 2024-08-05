@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-public class BoneCollector : MonoBehaviour
+public class CollectionManager : MonoBehaviour
 {
     [SerializeField]
     private int score = 0;

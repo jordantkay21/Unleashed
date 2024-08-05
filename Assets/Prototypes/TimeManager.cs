@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-public class GameTimer : MonoBehaviour
+public class TimeManager : MonoBehaviour
 {
     public float timeRemaining = 60f;
     public TMP_Text timerText;

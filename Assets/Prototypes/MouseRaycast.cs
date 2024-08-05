@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class MouseRaycast : MonoBehaviour
+public class MouseRaycast : KSMonoBehaviour
 {
     [SerializeField]
     private bool raycastEnabled = true;

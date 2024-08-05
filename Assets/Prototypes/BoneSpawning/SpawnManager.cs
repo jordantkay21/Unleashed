@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 
-public class SpawnManager : MonoBehaviour
+public class SpawnManager : KSMonoBehaviour
 {
     public int spawnAmount;
 
@@ -49,40 +49,54 @@ public class SpawnManager : MonoBehaviour
 
     private void SpawnBones()
     {
-        if (bonePool.Count < spawnAmount)
-            spawnAmount = bonePool.Count;
-
-        for (int i = 0; i < spawnAmount; i++)
+        if (bonePool != null && bonePool.Count > 0)
         {
-            GameObject bone = bonePool[i].gameObject;
+            if (bonePool.Count < spawnAmount)
+                spawnAmount = bonePool.Count;
 
-            activeBones.Add(bone);
+            Debug.Log($"bonePool Amount: {bonePool.Count}");
+            Debug.Log($"spawnAmount: {spawnAmount}");
 
-            Bone boneComponent = bone.GetComponent<Bone>();
-            if (boneComponent != null)
+            for (int i = 0; i < spawnAmount - 1; i++)
             {
-                //Debug.Log($"{bone} successfully has bone Component Attached");
-                boneComponent.OnCollected += HandledBoneCollected;
+                Debug.Log($"index value: {i}");
+                GameObject bone = bonePool[i].gameObject;
 
-                DebugBoneCollectedSubscribers(boneComponent);
+                activeBones.Add(bone);
+
+                Bone boneComponent = bone.GetComponent<Bone>();
+                if (boneComponent != null)
+                {
+                    boneComponent.OnCollected += HandledBoneCollected;
+
+                    //Uncomment to debug event subscribers
+                    //DebugBoneCollectedSubscribers(boneComponent);
+                }
+                else
+                    Debug.Log($"{bone.name} is missing the boneComponent");
+
+                bonePool[i].gameObject.SetActive(true);
             }
-            else
-                Debug.Log($"{bone.name} is missing the boneComponent");
-
-            bonePool[i].gameObject.SetActive(true);
-            bonePool.Remove(bone.transform);
         }
+        else
+        {
+            //GameOver Logic
+            Debug.Log("NO BONES TO SPAWN");
+            return;
+        }
+
+        bonePool.RemoveRange(0, spawnAmount);
     }
 
     private void HandledBoneCollected(GameObject bone)
     {
-        Debug.Log($"HandledBoneCollected() has been executed");
+        //Debug.Log($"HandledBoneCollected() has been executed");
 
         activeBones.Remove(bone.gameObject);
 
         if (activeBones.Count == 0)
         {
-            Debug.Log("All Bones Collected");
+            //Debug.Log("All Bones Collected");
             OnAllBonesCollected?.Invoke();
         }
     }

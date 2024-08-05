@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1874406554198868125}
   - component: {fileID: 3452669898150363079}
   m_Layer: 0
-  m_Name: Sphere_Collectable
+  m_Name: Bone_Collectable
   m_TagString: Bone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -169,7 +169,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3997721292117569813, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_Name
-      value: Sphere_Collectable (3)
+      value: Bone_Collectable_5.4
       objectReference: {fileID: 0}
     - target: {fileID: 6717125616032188976, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_LocalPosition.x
@@ -226,7 +226,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3997721292117569813, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_Name
-      value: Sphere_Collectable
+      value: Bone_Collectable_5.1
       objectReference: {fileID: 0}
     - target: {fileID: 6717125616032188976, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_LocalPosition.x
@@ -288,7 +288,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3997721292117569813, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_Name
-      value: Sphere_Collectable
+      value: Bone_Collectable_3.1
       objectReference: {fileID: 0}
     - target: {fileID: 6717125616032188976, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_LocalPosition.x
@@ -350,7 +350,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3997721292117569813, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_Name
-      value: Sphere_Collectable
+      value: Bone_Collectable_2.1
       objectReference: {fileID: 0}
     - target: {fileID: 6717125616032188976, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_LocalPosition.x
@@ -407,7 +407,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3997721292117569813, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_Name
-      value: Sphere_Collectable (2)
+      value: Bone_Collectable_1.3
       objectReference: {fileID: 0}
     - target: {fileID: 6717125616032188976, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_LocalPosition.x
@@ -636,7 +636,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3997721292117569813, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_Name
-      value: Sphere_Collectable (1)
+      value: Bone_Collectable_4.2
       objectReference: {fileID: 0}
     - target: {fileID: 6717125616032188976, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_LocalPosition.x
@@ -729,7 +729,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3997721292117569813, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_Name
-      value: Sphere_Collectable (3)
+      value: Bone_Collectable_1.4
       objectReference: {fileID: 0}
     - target: {fileID: 6717125616032188976, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_LocalPosition.x
@@ -809,7 +809,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3997721292117569813, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_Name
-      value: Sphere_Collectable (4)
+      value: Bone_Collectable_2.5
       objectReference: {fileID: 0}
     - target: {fileID: 6717125616032188976, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_LocalPosition.x
@@ -866,7 +866,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3997721292117569813, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_Name
-      value: Sphere_Collectable (1)
+      value: Bone_Collectable_3.2
       objectReference: {fileID: 0}
     - target: {fileID: 6717125616032188976, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_LocalPosition.x
@@ -938,7 +938,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3997721292117569813, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_Name
-      value: Sphere_Collectable (3)
+      value: Bone_Collectable_2.4
       objectReference: {fileID: 0}
     - target: {fileID: 6717125616032188976, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1056,7 +1056,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3997721292117569813, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_Name
-      value: Sphere_Collectable (4)
+      value: Bone_Collectable_5.5
       objectReference: {fileID: 0}
     - target: {fileID: 6717125616032188976, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1123,7 +1123,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3997721292117569813, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_Name
-      value: Sphere_Collectable (2)
+      value: Bone_Collectable_5.3
       objectReference: {fileID: 0}
     - target: {fileID: 6717125616032188976, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1180,7 +1180,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3997721292117569813, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_Name
-      value: Sphere_Collectable (1)
+      value: Bone_Collectable_5.2
       objectReference: {fileID: 0}
     - target: {fileID: 6717125616032188976, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1237,7 +1237,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3997721292117569813, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_Name
-      value: Sphere_Collectable (4)
+      value: Bone_Collectable_3.5
       objectReference: {fileID: 0}
     - target: {fileID: 6717125616032188976, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1304,7 +1304,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3997721292117569813, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_Name
-      value: Sphere_Collectable (2)
+      value: Bone_Collectable_3.3
       objectReference: {fileID: 0}
     - target: {fileID: 6717125616032188976, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1402,7 +1402,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3997721292117569813, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_Name
-      value: Sphere_Collectable (3)
+      value: Bone_Collectable_3.4
       objectReference: {fileID: 0}
     - target: {fileID: 6717125616032188976, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1464,7 +1464,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3997721292117569813, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_Name
-      value: Sphere_Collectable
+      value: Bone_Collectable_4.1
       objectReference: {fileID: 0}
     - target: {fileID: 6717125616032188976, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1588,7 +1588,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3997721292117569813, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_Name
-      value: Sphere_Collectable (1)
+      value: Bone_Collectable_2.2
       objectReference: {fileID: 0}
     - target: {fileID: 6717125616032188976, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1645,7 +1645,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3997721292117569813, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_Name
-      value: Sphere_Collectable (4)
+      value: Bone_Collectable_1.5
       objectReference: {fileID: 0}
     - target: {fileID: 6717125616032188976, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1766,7 +1766,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3997721292117569813, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_Name
-      value: Sphere_Collectable (2)
+      value: Bone_Collectable_4.3
       objectReference: {fileID: 0}
     - target: {fileID: 6717125616032188976, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1823,7 +1823,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3997721292117569813, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_Name
-      value: Sphere_Collectable (2)
+      value: Bone_Collectable_2.3
       objectReference: {fileID: 0}
     - target: {fileID: 6717125616032188976, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1916,7 +1916,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3997721292117569813, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_Name
-      value: Sphere_Collectable (4)
+      value: Bone_Collectable_4.5
       objectReference: {fileID: 0}
     - target: {fileID: 6717125616032188976, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1973,7 +1973,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3997721292117569813, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_Name
-      value: Sphere_Collectable (1)
+      value: Bone_Collectable_1.2
       objectReference: {fileID: 0}
     - target: {fileID: 6717125616032188976, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2035,7 +2035,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3997721292117569813, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_Name
-      value: Sphere_Collectable (3)
+      value: Bone_Collectable_4.4
       objectReference: {fileID: 0}
     - target: {fileID: 6717125616032188976, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2097,7 +2097,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3997721292117569813, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_Name
-      value: Sphere_Collectable
+      value: Bone_Collectable_1.1
       objectReference: {fileID: 0}
     - target: {fileID: 6717125616032188976, guid: bfcbf105615ca664da9293ec68021504, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2194,7 +2194,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5418222939501315684, guid: 2e9b35c5e71827945a761210f0f3d3e5, type: 3}
       propertyPath: spawnAmount
-      value: 10
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6626663532000339955, guid: 2e9b35c5e71827945a761210f0f3d3e5, type: 3}
       propertyPath: m_Name

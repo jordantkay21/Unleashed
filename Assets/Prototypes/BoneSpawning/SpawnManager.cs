@@ -8,9 +8,9 @@ public class SpawnManager : MonoBehaviour
 
     private static event Action OnAllBonesCollected;
 
-    private List<Transform> spawnPoints = new List<Transform>();
-    private List<Transform> bonePool;
-    private List<GameObject> activeBones = new List<GameObject>();
+    public List<Transform> spawnPoints = new List<Transform>();
+    public List<Transform> bonePool;
+    public List<GameObject> activeBones = new List<GameObject>();
 
     private void OnEnable()
     {
@@ -55,23 +55,53 @@ public class SpawnManager : MonoBehaviour
         for (int i = 0; i < spawnAmount; i++)
         {
             GameObject bone = bonePool[i].gameObject;
+
             activeBones.Add(bone);
-            bonePool.Remove(bone.transform);
-            bone.GetComponent<Bone>().OnCollected += HandledBoneCollected;
+
+            Bone boneComponent = bone.GetComponent<Bone>();
+            if (boneComponent != null)
+            {
+                //Debug.Log($"{bone} successfully has bone Component Attached");
+                boneComponent.OnCollected += HandledBoneCollected;
+
+                DebugBoneCollectedSubscribers(boneComponent);
+            }
+            else
+                Debug.Log($"{bone.name} is missing the boneComponent");
+
             bonePool[i].gameObject.SetActive(true);
+            bonePool.Remove(bone.transform);
         }
     }
 
     private void HandledBoneCollected(GameObject bone)
     {
-        activeBones.Remove(bone);
+        Debug.Log($"HandledBoneCollected() has been executed");
+
+        activeBones.Remove(bone.gameObject);
 
         if (activeBones.Count == 0)
+        {
+            Debug.Log("All Bones Collected");
             OnAllBonesCollected?.Invoke();
+        }
     }
 
     private void OnDisable()
     {
         OnAllBonesCollected -= SpawnBones;
+    }
+
+    private void DebugBoneCollectedSubscribers(Bone boneComponent)
+    {
+        Delegate[] subscribers = boneComponent.GetOnCollectedInvocationList();
+
+        if (subscribers != null)
+        {
+            foreach (var subscriber in subscribers)
+                Debug.Log($"{boneComponent.gameObject.name}'s OnCollected event subscriber: {subscriber.Method.Name}");
+        }
+        else
+            Debug.Log("No subscribers for OnCollected event");
     }
 }

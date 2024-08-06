@@ -8,7 +8,8 @@ public class SpawnManager : KSMonoBehaviour
 
     private static event Action OnAllBonesCollected;
 
-    public List<Transform> spawnPoints = new List<Transform>();
+    //public List<Transform> spawnPoints = new List<Transform>();
+    public BoneInitializer[] boneInitializers;
     public List<Transform> bonePool;
     public List<GameObject> activeBones = new List<GameObject>();
 
@@ -16,17 +17,30 @@ public class SpawnManager : KSMonoBehaviour
     {
         OnAllBonesCollected += SpawnBones;
     }
+
+    [Obsolete]
     private void Start()
     {
-        InitializeSpawnPoints();
-        CreateBonePool(spawnPoints);
+        Debug.Log("SpawnManager.Start() called");
+        boneInitializers = FindObjectsOfType<BoneInitializer>();
+        foreach (var initializer in boneInitializers)
+        {
+            initializer.OnBonesInitialized += AddBonesToPool;
+            DebugBoneInitializedSubscribers(initializer);
+            Debug.Log("AddBonesToPool should be subscribed");
+        }    
+    }
+
+    private void AddBonesToPool(List<Transform> bonesList)
+    {
+        Debug.Log("AddBonesToPool is called");
+        bonePool.AddRange(bonesList);
+        CreateBonePool();
         SpawnBones();
     }
 
-    private void CreateBonePool(List<Transform> spawnPoints)
+    private void CreateBonePool()
     {
-        bonePool = new List<Transform>(spawnPoints); ////Copying the SpawnPoints List
-
         for (int i = 0; i < bonePool.Count; i++)
         {
             Transform temp = bonePool[i]; //temporarily holds the value of the current element at index "i" to facilitate the swap
@@ -36,6 +50,7 @@ public class SpawnManager : KSMonoBehaviour
         }
     }
 
+    /*
     private void InitializeSpawnPoints()
     {
         GameObject[] spawnPointObjects = GameObject.FindGameObjectsWithTag("Bone");
@@ -46,6 +61,7 @@ public class SpawnManager : KSMonoBehaviour
             obj.SetActive(false);
         }
     }
+    */
 
     private void SpawnBones()
     {
@@ -57,9 +73,9 @@ public class SpawnManager : KSMonoBehaviour
             Debug.Log($"bonePool Amount: {bonePool.Count}");
             Debug.Log($"spawnAmount: {spawnAmount}");
 
-            for (int i = 0; i < spawnAmount - 1; i++)
+            for (int i = 0; i < spawnAmount; i++)
             {
-                Debug.Log($"index value: {i}");
+                //Debug.Log($"index value: {i}");
                 GameObject bone = bonePool[i].gameObject;
 
                 activeBones.Add(bone);
@@ -117,5 +133,18 @@ public class SpawnManager : KSMonoBehaviour
         }
         else
             Debug.Log("No subscribers for OnCollected event");
+    }
+
+    private void DebugBoneInitializedSubscribers(BoneInitializer boneInitializer)
+    {
+        Delegate[] subscribers = boneInitializer.GetOnBonesInitializedInvocationList();
+
+        if (subscribers != null)
+        {
+            foreach (var subscriber in subscribers)
+                Debug.Log($"{boneInitializer.gameObject.name}'s event subscriber: {subscriber.Method.Name}");
+        }
+        else
+            Debug.Log("No subscribers for BoneInitialized event");
     }
 }

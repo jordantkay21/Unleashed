@@ -5,7 +5,6 @@ public class Bone : KSMonoBehaviour
 {
     public event Action<GameObject> OnCollected;
 
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))

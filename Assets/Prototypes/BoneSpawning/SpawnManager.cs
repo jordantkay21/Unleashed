@@ -58,16 +58,24 @@ public class SpawnManager : KSMonoBehaviour
 
     private void SelectRandomInitializer()
     {
-        int currentIndex = UnityEngine.Random.Range(0, boneInitializers.Count);
+        if (boneInitializers.Count > 0)
+        {
+            int currentIndex = UnityEngine.Random.Range(0, boneInitializers.Count);
 
-        currentInitializer = boneInitializers[currentIndex];
-        currentInitializer.OnBonesInitialized += AddBonesToPool;
-        if (verbose) DebugBoneInitializedSubscribers(currentInitializer);
-        if (verbose) Debug.Log("AddBonesToPool should be subscribed");
+            currentInitializer = boneInitializers[currentIndex];
+            currentInitializer.OnBonesInitialized += AddBonesToPool;
+            if (verbose) DebugBoneInitializedSubscribers(currentInitializer);
+            if (verbose) Debug.Log("AddBonesToPool should be subscribed");
 
-        currentInitializer.InitializeBones();
-        boneInitializers.RemoveAt(currentIndex); //prevents area from being selected again
-
+            currentInitializer.InitializeBones();
+            boneInitializers.RemoveAt(currentIndex); //prevents area from being selected again
+        }
+        else
+        {
+            //GameOver Logic
+            Debug.Log("GameOver");
+            return;
+        }
     }
 
     private void AddBonesToPool(List<Transform> bonesList)

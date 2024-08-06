@@ -32,6 +32,10 @@ public class SpawnManager : KSMonoBehaviour
         InitilizeStartingArea();  
     }
 
+    #region Bone Initilizers Management
+    /// <summary>
+    /// Initializes the starting area by finding and activating the initial boneInitializer
+    /// </summary>
     private void InitilizeStartingArea()
     {
         BoneInitializer foundInitializer = null;
@@ -46,7 +50,6 @@ public class SpawnManager : KSMonoBehaviour
                 foundInitializer.OnBonesInitialized += AddBonesToPool;
                 
                 if (verbose) DebugBoneInitializedSubscribers(currentInitializer);
-                if (verbose) Debug.Log("AddBonesToPool should be subscribed");
 
                 foundInitializer.InitializeBones();
                 boneInitializers.RemoveAt(currentIndex);
@@ -55,7 +58,9 @@ public class SpawnManager : KSMonoBehaviour
 
     }
 
-
+    /// <summary>
+    /// Randomly selects a BoneInitilizer to activate after all bones are collected
+    /// </summary>
     private void SelectRandomInitializer()
     {
         if (boneInitializers.Count > 0)
@@ -77,16 +82,25 @@ public class SpawnManager : KSMonoBehaviour
             return;
         }
     }
+    #endregion
 
+    #region Bone Pool Management
+    /// <summary>
+    /// Adds bones to the pool and prepares for spawning
+    /// </summary>
+    /// <param name="bonesList">List of bones from the BoneInitilizers</param>
     private void AddBonesToPool(List<Transform> bonesList)
     {
        if(verbose) Debug.Log("AddBonesToPool is called");
         bonePool.AddRange(bonesList);
-        CreateBonePool();
+        ShuffleBonePool();
         SpawnBones();
     }
 
-    private void CreateBonePool()
+    /// <summary>
+    /// Shuffles the bone pool to randomize spawn locations
+    /// </summary>
+    private void ShuffleBonePool()
     {
         for (int i = 0; i < bonePool.Count; i++)
         {
@@ -96,72 +110,51 @@ public class SpawnManager : KSMonoBehaviour
             bonePool[randomIndex] = temp; //elements at the current index "i" and the randomly chosen index "randomIndex" are swapped
         }
     }
+    #endregion
 
-    /*
-    private void InitializeSpawnPoints()
-    {
-        GameObject[] spawnPointObjects = GameObject.FindGameObjectsWithTag("Bone");
-
-        foreach (GameObject obj in spawnPointObjects)
-        {
-            spawnPoints.Add(obj.transform);
-            obj.SetActive(false);
-        }
-    }
-    */
-
+    /// <summary>
+    /// Spawns bones from the bone pool
+    /// </summary>
     private void SpawnBones()
     {
-        if (bonePool != null && bonePool.Count > 0)
+        if(bonePool.Count > 0)
         {
-            if (bonePool.Count < spawnAmount)
-                spawnAmount = bonePool.Count;
-
-            if(verbose) Debug.Log($"bonePool Amount: {bonePool.Count}");
-            if(verbose) Debug.Log($"spawnAmount: {spawnAmount}");
-
-            for (int i = 0; i < spawnAmount; i++)
+            spawnAmount = Mathf.Min(spawnAmount, bonePool.Count);
+            for (int i=0; i < spawnAmount; i++)
             {
-                //Debug.Log($"index value: {i}");
                 GameObject bone = bonePool[i].gameObject;
-
                 activeBones.Add(bone);
-
-                Bone boneComponent = bone.GetComponent<Bone>();
-                if (boneComponent != null)
-                {
-                    boneComponent.OnCollected += HandledBoneCollected;
-
-                    //Uncomment to debug event subscribers
-                    if(verbose) DebugBoneCollectedSubscribers(boneComponent);
-                }
-                else
-                    Debug.Log($"{bone.name} is missing the boneComponent");
-
-                bonePool[i].gameObject.SetActive(true);
+                HandleBoneComponent(bone);
+                bone.SetActive(true);
             }
+            bonePool.RemoveRange(0, spawnAmount);
         }
         else
         {
-            //GameOver Logic
-            Debug.Log("NO BONES TO SPAWN");
-            return;
+            Debug.Log("NO BONES TO SPAWN - GameOver possible");
         }
+    }
 
-        bonePool.RemoveRange(0, spawnAmount);
+    private void HandleBoneComponent(GameObject bone)
+    {
+        Bone boneComponent = bone.GetComponent<Bone>();
+
+        if (boneComponent != null)
+        {
+            boneComponent.OnCollected += HandledBoneCollected;
+            if (verbose) DebugBoneCollectedSubscribers(boneComponent);
+        }
+        else
+        {
+            Debug.Log("${bone.name} is missing the Bone component");
+        }
     }
 
     private void HandledBoneCollected(GameObject bone)
     {
-        //Debug.Log($"HandledBoneCollected() has been executed");
-
         activeBones.Remove(bone.gameObject);
-
         if (activeBones.Count == 0)
-        {
-            //Debug.Log("All Bones Collected");
             OnAllBonesCollected?.Invoke();
-        }
     }
 
     private void OnDisable()
@@ -170,6 +163,7 @@ public class SpawnManager : KSMonoBehaviour
         OnAllBonesCollected -= SelectRandomInitializer;
     }
 
+    #region Debugging Helpers
     private void DebugBoneCollectedSubscribers(Bone boneComponent)
     {
         Delegate[] subscribers = boneComponent.GetOnCollectedInvocationList();
@@ -195,4 +189,5 @@ public class SpawnManager : KSMonoBehaviour
         else
             Debug.Log("No subscribers for BoneInitialized event");
     }
+    #endregion
 }

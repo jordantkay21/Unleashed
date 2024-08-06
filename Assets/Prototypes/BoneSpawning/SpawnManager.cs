@@ -8,32 +8,71 @@ public class SpawnManager : KSMonoBehaviour
 
     private static event Action OnAllBonesCollected;
 
-    //public List<Transform> spawnPoints = new List<Transform>();
-    public BoneInitializer[] boneInitializers;
+    public BoneInitializer[] boneInitializersArray;
+    public List<BoneInitializer> boneInitializers;
+
+    public BoneInitializer currentInitializer;
+
     public List<Transform> bonePool;
     public List<GameObject> activeBones = new List<GameObject>();
 
     private void OnEnable()
     {
         OnAllBonesCollected += SpawnBones;
+        OnAllBonesCollected += SelectRandomInitializer;
     }
 
     [Obsolete]
     private void Start()
     {
-        Debug.Log("SpawnManager.Start() called");
-        boneInitializers = FindObjectsOfType<BoneInitializer>();
-        foreach (var initializer in boneInitializers)
+        
+        if(verbose) Debug.Log("SpawnManager.Start() called");
+        boneInitializersArray = FindObjectsOfType<BoneInitializer>();
+        boneInitializers = new List<BoneInitializer>(boneInitializersArray);
+        InitilizeStartingArea();  
+    }
+
+    private void InitilizeStartingArea()
+    {
+        BoneInitializer foundInitializer = null;
+
+        for (int i = 0; i < boneInitializers.Count; i++)
         {
-            initializer.OnBonesInitialized += AddBonesToPool;
-            DebugBoneInitializedSubscribers(initializer);
-            Debug.Log("AddBonesToPool should be subscribed");
-        }    
+            if (boneInitializers[i].CompareTag("StartingArea"))
+            {
+                int currentIndex = i;
+                foundInitializer = boneInitializers[i];
+                
+                foundInitializer.OnBonesInitialized += AddBonesToPool;
+                
+                if (verbose) DebugBoneInitializedSubscribers(currentInitializer);
+                if (verbose) Debug.Log("AddBonesToPool should be subscribed");
+
+                foundInitializer.InitializeBones();
+                boneInitializers.RemoveAt(currentIndex);
+            }
+        }
+
+    }
+
+
+    private void SelectRandomInitializer()
+    {
+        int currentIndex = UnityEngine.Random.Range(0, boneInitializers.Count);
+
+        currentInitializer = boneInitializers[currentIndex];
+        currentInitializer.OnBonesInitialized += AddBonesToPool;
+        if (verbose) DebugBoneInitializedSubscribers(currentInitializer);
+        if (verbose) Debug.Log("AddBonesToPool should be subscribed");
+
+        currentInitializer.InitializeBones();
+        boneInitializers.RemoveAt(currentIndex); //prevents area from being selected again
+
     }
 
     private void AddBonesToPool(List<Transform> bonesList)
     {
-        Debug.Log("AddBonesToPool is called");
+       if(verbose) Debug.Log("AddBonesToPool is called");
         bonePool.AddRange(bonesList);
         CreateBonePool();
         SpawnBones();
@@ -70,8 +109,8 @@ public class SpawnManager : KSMonoBehaviour
             if (bonePool.Count < spawnAmount)
                 spawnAmount = bonePool.Count;
 
-            Debug.Log($"bonePool Amount: {bonePool.Count}");
-            Debug.Log($"spawnAmount: {spawnAmount}");
+            if(verbose) Debug.Log($"bonePool Amount: {bonePool.Count}");
+            if(verbose) Debug.Log($"spawnAmount: {spawnAmount}");
 
             for (int i = 0; i < spawnAmount; i++)
             {
@@ -86,7 +125,7 @@ public class SpawnManager : KSMonoBehaviour
                     boneComponent.OnCollected += HandledBoneCollected;
 
                     //Uncomment to debug event subscribers
-                    //DebugBoneCollectedSubscribers(boneComponent);
+                    if(verbose) DebugBoneCollectedSubscribers(boneComponent);
                 }
                 else
                     Debug.Log($"{bone.name} is missing the boneComponent");
@@ -120,6 +159,7 @@ public class SpawnManager : KSMonoBehaviour
     private void OnDisable()
     {
         OnAllBonesCollected -= SpawnBones;
+        OnAllBonesCollected -= SelectRandomInitializer;
     }
 
     private void DebugBoneCollectedSubscribers(Bone boneComponent)

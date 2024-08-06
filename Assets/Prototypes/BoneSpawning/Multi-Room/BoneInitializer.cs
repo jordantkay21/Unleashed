@@ -9,13 +9,10 @@ public class BoneInitializer : KSMonoBehaviour
 
     private void Start()
     {
-        Debug.Log("BoneInitalizer.Awake is called");
-        boneList = InitializeBones();
-        OnBonesInitialized?.Invoke(boneList);
-        Debug.Log("BoneInitializer.OnBonesInitialized invoked");
+        if(verbose) Debug.Log("BoneInitalizer.Awake is called");
     }
 
-    private List<Transform> InitializeBones()
+    public void InitializeBones()
     {
         foreach (Transform child in transform)
         {
@@ -23,11 +20,11 @@ public class BoneInitializer : KSMonoBehaviour
             {
                 boneList.Add(child);
                 child.gameObject.SetActive(false); //Initially disable the bone objects
-                Debug.Log($"{child.gameObject.name} added to boneList and deactivated");
+                if (verbose) Debug.Log($"{child.gameObject.name} added to boneList and deactivated");
             }
         }
-
-            return boneList;
+        OnBonesInitialized?.Invoke(boneList);
+        if (verbose) Debug.Log("BoneInitializer.OnBonesInitialized invoked");
     }
 
     public Delegate[] GetOnBonesInitializedInvocationList()

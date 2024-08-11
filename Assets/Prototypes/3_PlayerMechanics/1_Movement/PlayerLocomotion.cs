@@ -50,7 +50,7 @@ public class PlayerLocomotion : MonoBehaviour
         cameraTransform = Camera.main.transform;
 
         //ActionMap
-        InputActionMap movementActionMap = inputActions.FindActionMap("PlayerActions");
+        InputActionMap movementActionMap = inputActions.FindActionMap("Movement");
         movementActionMap.Enable();
 
         //Movement

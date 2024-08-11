@@ -1,0 +1,25 @@
+using UnityEngine;
+using System;
+
+public class EventManager : MonoBehaviour
+{
+    public static EventManager instance;
+
+    public event Action<EnemyAI.State> OnChangeAIState;
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+            Destroy(gameObject);
+
+    }
+    public void ChangeAIState(EnemyAI.State newState)
+    {
+        OnChangeAIState?.Invoke(newState);
+    }
+}

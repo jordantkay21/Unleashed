@@ -3,13 +3,26 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class EnemyAI : MonoBehaviour
+public class EnemyAI : KSMonoBehaviour
 {
     [Tooltip("Points between which the enemy patrols")]
     public Transform[] patrolPoints;
     private int currentPatrolIndex;
     private NavMeshAgent agent;
 
+    public enum State {Patrol, Chase, Attack}
+    public State currentState;
+
+
+    private void OnEnable()
+    {
+        EventManager.instance.OnChangeAIState += SetState;
+    }
+
+    private void OnDisable()
+    {
+        EventManager.instance.OnChangeAIState -= SetState;
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -17,14 +30,38 @@ public class EnemyAI : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
 
         currentPatrolIndex = 0;
-        MoveToNextPatrolPoint();
+        EventManager.instance.ChangeAIState(State.Patrol);
     }
+
+    private void SetState(State newState)
+    {
+        currentState = newState;
+        if (verbose) Debug.Log($"Entered into {currentState} state.");
+        HandleStateChange();
+    }
+
+    private void HandleStateChange()
+    {
+        switch (currentState)
+        {
+            case State.Patrol:
+                MoveToNextPatrolPoint();
+                break;
+            case State.Chase:
+                //Implement Chase Logic Here
+                break;
+            case State.Attack:
+                //Implement Attack Logic Here
+                break;
+
+        }
+    }
+
 
     // Update is called once per frame
     void Update()
     {
-        if (!agent.pathPending && agent.remainingDistance < 0.5f)
-            MoveToNextPatrolPoint();
+        //might want to handle continous actions like chasing or attacking here
     }
     private void MoveToNextPatrolPoint()
     {

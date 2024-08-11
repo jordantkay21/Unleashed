@@ -8,6 +8,8 @@ TagManager:
   - Bone
   - SpawnPoint.Bone
   - StartingArea
+  - EnemyAI
+  - PatrolPoint
   layers:
   - Default
   - TransparentFX

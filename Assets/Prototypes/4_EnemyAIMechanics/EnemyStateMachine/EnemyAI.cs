@@ -13,12 +13,14 @@ public class EnemyAI : KSMonoBehaviour
     private NavMeshAgent agent;
 
     [SerializeField] private Transform playerTarget; //The target player object
-    [SerializeField] private float sightRange = 15f;
-    [SerializeField] private float fieldOfViewAngle = 120f; //120 degrees of vision
     [SerializeField] private LayerMask targetMask; //Layer on which the targets (e.g. player) resides
     [SerializeField] private LayerMask obstacleMask; //Layer on which the obstacles (e.g. walls) resides
-    [SerializeField] private Transform eyePosition; //The point from which sight starts, typically the head of the AI
     [SerializeField] private float checkRate = 0.2f;
+    [SerializeField] private bool playerInSight;
+
+    public float sightRange = 15f;
+    public Transform eyePosition; //The point from which sight starts, typically the head of the AI
+    public float fieldOfViewAngle = 120f; //120 degrees of vision
 
     private Coroutine currentRoutine;
 
@@ -40,7 +42,7 @@ public class EnemyAI : KSMonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        SetState(State.Patrol);
+        EventManager.instance.ChangeAIState(State.Patrol);
         StartCoroutine(SightCheck());
     }
 
@@ -55,12 +57,14 @@ public class EnemyAI : KSMonoBehaviour
             case State.Patrol:
                 currentRoutine = StartCoroutine(Patrol());
                 break;
+                /*
             case State.Chase:
                 currentRoutine = StartCoroutine(Chase());
                 break;
             case State.Attack:
                 currentRoutine = StartCoroutine(Attack());
                 break;
+                */
         }
     }
     IEnumerator Patrol()
@@ -87,6 +91,8 @@ public class EnemyAI : KSMonoBehaviour
             yield return new WaitForSeconds(0.5f); 
         }
     }
+
+    /*
     IEnumerator Chase()
     {
         while (true)
@@ -104,14 +110,34 @@ public class EnemyAI : KSMonoBehaviour
             yield return new WaitForSeconds(1); //Example delay between attacks
         }
     }
+    */
 
     IEnumerator SightCheck()
     {
         while (true)
         {
             yield return new WaitForSeconds(checkRate); //Wait for the specified check rate
+
             if (currentState == State.Patrol && CanSeePlayer())
-                EventManager.instance.ChangeAIState(State.Chase);
+            {
+                if(!playerInSight) //Player was not previously in sight
+                {
+                    playerInSight = true;
+                    EventManager.instance.PlayerSpotted();
+                }
+                else
+                {
+                    if(playerInSight) // Player was previously in sight
+                    {
+                        playerInSight = false;
+                        EventManager.instance.PlayerOutOfSight();
+                    }
+                }
+                Debug.Log("Player in sight!");
+                //Here you can trigger the UI alert
+                UIManager.instance.DisplayAlert("Player is in sight!");
+            }
+                    //EventManager.instance.ChangeAIState(State.Chase);
         }
     }
 

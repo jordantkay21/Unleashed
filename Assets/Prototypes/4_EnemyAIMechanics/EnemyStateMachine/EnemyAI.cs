@@ -1,16 +1,28 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class EnemyAI : KSMonoBehaviour
 {
+    [SerializeField]
     [Tooltip("Points between which the enemy patrols")]
-    public Transform[] patrolPoints;
-    private int currentPatrolIndex;
+    private Transform[] patrolPoints;
+    private int currentPatrolIndex = 0;
     private NavMeshAgent agent;
 
-    public enum State {Patrol, Chase, Attack}
+    [SerializeField] private Transform playerTarget; //The target player object
+    [SerializeField] private float sightRange = 15f;
+    [SerializeField] private float fieldOfViewAngle = 120f; //120 degrees of vision
+    [SerializeField] private LayerMask targetMask; //Layer on which the targets (e.g. player) resides
+    [SerializeField] private LayerMask obstacleMask; //Layer on which the obstacles (e.g. walls) resides
+    [SerializeField] private Transform eyePosition; //The point from which sight starts, typically the head of the AI
+    [SerializeField] private float checkRate = 0.2f;
+
+    private Coroutine currentRoutine;
+
+    public enum State { Patrol, Chase, Attack }
     public State currentState;
 
 
@@ -28,52 +40,99 @@ public class EnemyAI : KSMonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-
-        currentPatrolIndex = 0;
-        EventManager.instance.ChangeAIState(State.Patrol);
+        SetState(State.Patrol);
+        StartCoroutine(SightCheck());
     }
 
     private void SetState(State newState)
     {
-        currentState = newState;
-        if (verbose) Debug.Log($"Entered into {currentState} state.");
-        HandleStateChange();
-    }
+        if (currentRoutine != null)
+            StopCoroutine(currentRoutine);
 
-    private void HandleStateChange()
-    {
+        currentState = newState;
         switch (currentState)
         {
             case State.Patrol:
-                MoveToNextPatrolPoint();
+                currentRoutine = StartCoroutine(Patrol());
                 break;
             case State.Chase:
-                //Implement Chase Logic Here
+                currentRoutine = StartCoroutine(Chase());
                 break;
             case State.Attack:
-                //Implement Attack Logic Here
+                currentRoutine = StartCoroutine(Attack());
                 break;
+        }
+    }
+    IEnumerator Patrol()
+    {
+        while (true)
+        {
+            //There are no points to patrol to
+            if (patrolPoints.Length == 0)
+                yield return null;
 
+            //Set the agent to go to the currently selected destination
+            agent.destination = patrolPoints[currentPatrolIndex].position;
+
+            //Wait until the agent has reached its destination before moving to the next one
+            while (agent.pathPending || agent.remainingDistance > agent.stoppingDistance)
+                yield return null; //wait for next frame
+
+            //Choose the next point in the array as the destination,
+            //cycling to the start if necessary
+            currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Length;
+            yield return null;
+
+            //Add a small delay if needed before moving to the next point
+            yield return new WaitForSeconds(0.5f); 
+        }
+    }
+    IEnumerator Chase()
+    {
+        while (true)
+        {
+            agent.destination = playerTarget.position;
+            yield return null; // Continue updating the destination as long as the state doesn't change
         }
     }
 
-
-    // Update is called once per frame
-    void Update()
+    IEnumerator Attack()
     {
-        //might want to handle continous actions like chasing or attacking here
-    }
-    private void MoveToNextPatrolPoint()
-    {
-        //There are no points to patrol to
-        if (patrolPoints.Length == 0) return;
-
-        //Set the agent to go to the currently selected destination
-        agent.destination = patrolPoints[currentPatrolIndex].position;
-
-        //Choose the next point in the array as the destination,
-        //cycling to the start if necessary
-        currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Length;
+        while (true)
+        {
+            // Implement attack logic here
+            yield return new WaitForSeconds(1); //Example delay between attacks
+        }
     }
 
+    IEnumerator SightCheck()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(checkRate); //Wait for the specified check rate
+            if (currentState == State.Patrol && CanSeePlayer())
+                EventManager.instance.ChangeAIState(State.Chase);
+        }
+    }
+
+    private bool CanSeePlayer()
+    {
+        Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, sightRange, targetMask);
+
+        foreach (var target in targetsInViewRadius)
+        {
+            Transform targetTransform = target.transform;
+            Vector3 dirToTarget = (targetTransform.position - eyePosition.position).normalized;
+
+            if (Vector3.Angle(eyePosition.forward, dirToTarget) < fieldOfViewAngle / 2)
+            {
+                float dstToTarget = Vector3.Distance(eyePosition.position, targetTransform.position);
+
+                if (!Physics.Raycast(eyePosition.position, dirToTarget, dstToTarget, obstacleMask))
+                    return true; //Player is visible
+            }
+        }
+        
+        return false;
+    }
 }

@@ -36,6 +36,12 @@ public class AISelectionManager : MonoBehaviour
             OnAISelected(0);
     }
 
+    private void Update()
+    {
+        //Update the information each frame
+        DisplayAIInformation();
+    }
+
     private void OnAISelected(int index)
     {
         //Set the selected AI based on the dropdown selection
@@ -43,9 +49,6 @@ public class AISelectionManager : MonoBehaviour
 
         //Activate the selected AI's camera
         ActivateAICamera(selectedAI);
-
-        //Display AI Information
-        DisplayAIInformation();
     }
 
 

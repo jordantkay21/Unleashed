@@ -23,7 +23,7 @@ public class EnemyAI : KSMonoBehaviour
     [SerializeField] private LayerMask targetMask; //Layer on which the targets (e.g. player) resides
     [SerializeField] private LayerMask obstacleMask; //Layer on which the obstacles (e.g. walls) resides
     [SerializeField] private float checkRate = 0.2f;
-    [SerializeField] private bool playerInSight;
+    [SerializeField] public bool playerInSight;
 
     public float sightRange = 15f;
     public Transform eyePosition; //The point from which sight starts, typically the head of the AI

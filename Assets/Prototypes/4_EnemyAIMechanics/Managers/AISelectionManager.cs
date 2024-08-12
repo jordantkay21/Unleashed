@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System;
 using TMPro;
+using Unity.Cinemachine;
 
 public class AISelectionManager : MonoBehaviour
 {
@@ -39,23 +40,43 @@ public class AISelectionManager : MonoBehaviour
     {
         //Set the selected AI based on the dropdown selection
         selectedAI = aiAgents[index];
+
+        //Activate the selected AI's camera
+        ActivateAICamera(selectedAI);
+
+        //Display AI Information
         DisplayAIInformation();
     }
 
+
     private void DisplayAIInformation()
     {
-        if(selectedAI != null)
+        if (selectedAI != null)
         {
-            if (selectedAI != null)
-            {
-                //Display relevent information about the selected AI
-                infoPanel.text = $"AI Name: {selectedAI.name}\n" +
-                             $"Current State: {selectedAI.currentState}\n" +
-                             $"Position: {selectedAI.transform.position}\n" +
-                             $"Sight Range: {selectedAI.sightRange}\n" +
-                             $"Field of View: {selectedAI.fieldOfViewAngle}\n" +
-                             $"Player In Sight: {selectedAI.playerInSight}";
-            }
+            //Display relevent information about the selected AI
+            infoPanel.text = $"AI Name: {selectedAI.name}\n" +
+                         $"Current State: {selectedAI.currentState}\n" +
+                         $"Position: {selectedAI.transform.position}\n" +
+                         $"Sight Range: {selectedAI.sightRange}\n" +
+                         $"Field of View: {selectedAI.fieldOfViewAngle}\n" +
+                         $"Player In Sight: {selectedAI.playerInSight}";
         }
+    }
+    private void ActivateAICamera(EnemyAI selectedAI)
+    {
+        //Deactivate all AI cameras first
+        foreach (var agent in aiAgents)
+        {
+            var camera = agent.GetComponentInChildren<CinemachineVirtualCameraBase>();
+            if (camera != null)
+                camera.Priority = 0;
+            else
+                Debug.Log($"Camera on agents are null");
+        }
+
+        //Activate the selected AI's camera
+        var selectedCamera = selectedAI.GetComponentInChildren<CinemachineVirtualCameraBase>();
+        if (selectedCamera != null)
+            selectedCamera.Priority = 10;
     }
 }

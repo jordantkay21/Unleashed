@@ -11,11 +11,6 @@ public class FieldOfViewVisualizer : MonoBehaviour
     [SerializeField]
     private bool debugMode = true;  // Toggle to enable/disable visualization
 
-    [SerializeField]
-    private int rayCount = 50;  // Number of rays to cast to create the FOV mesh
-    [SerializeField]
-    private float meshResolution = 1f;  // Resolution of the mesh (size of triangles)
-
     void Start()
     {
         enemyAI = GetComponent<EnemyAI>();

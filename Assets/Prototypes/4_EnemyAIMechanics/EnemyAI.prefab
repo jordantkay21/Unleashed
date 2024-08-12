@@ -131,7 +131,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   verbose: 0
-  assignedZone: PatrolZone1
+  zoneDatabase: {fileID: 11400000, guid: 5b4963aaee0ea1545ab31e78be57885a, type: 2}
+  selectedZone: PatrolZone1
   patrolPoints: []
   playerTarget: {fileID: 0}
   targetMask:
@@ -145,6 +146,8 @@ MonoBehaviour:
   sightRange: 10
   eyePosition: {fileID: 1620415159757554737}
   fieldOfViewAngle: 90
+  highlightMaterial: {fileID: 2100000, guid: 0aa1b58f2c26ffd43bb9c7a26d4f216f, type: 2}
+  defaultMaterial: {fileID: 2100000, guid: efca9a8e8edb3804487786efb0ff2020, type: 2}
   currentState: 0
 --- !u!120 &3624566418544946785
 LineRenderer:
@@ -278,8 +281,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debugMode: 1
-  rayCount: 50
-  meshResolution: 1
 --- !u!33 &4427256614203697713
 MeshFilter:
   m_ObjectHideFlags: 0

@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class ZoneManager : MonoBehaviour
+public class ZoneManager : KSMonoBehaviour
 {
     public static ZoneManager instance;
 
@@ -31,16 +31,16 @@ public class ZoneManager : MonoBehaviour
 
     private void InitializeZones()
     {
-        Debug.Log("Initializing Zones...");
+        if(verbose) Debug.Log("Initializing Zones...");
 
         //Find all the zones (parent objects) in the scene
         foreach (Transform zoneTransform in transform)
         {
-            Debug.Log("Found Zone: " + zoneTransform.name);
+            if(verbose) Debug.Log("Found Zone: " + zoneTransform.name);
 
             if (zoneTransform.childCount == 0)
             {
-                Debug.LogWarning($"Zone {zoneTransform.name} has no child patrol points.");
+                if(verbose) Debug.LogWarning($"Zone {zoneTransform.name} has no child patrol points.");
                 continue;
             }
 
@@ -54,12 +54,12 @@ public class ZoneManager : MonoBehaviour
             {
                 if (patrolPoint == null)
                 {
-                    Debug.LogWarning($"Null patrol point found in {zoneTransform.name}");
+                    if(verbose) Debug.LogWarning($"Null patrol point found in {zoneTransform.name}");
                     continue;
                 }
 
                 newZone.patrolPoints.Add(patrolPoint);
-                Debug.Log($"Added Patrol Point: {patrolPoint.name}");
+                if(verbose) Debug.Log($"Added Patrol Point: {patrolPoint.name}");
             }
 
             //Add this zone to the list

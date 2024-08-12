@@ -31,6 +31,12 @@ public class EnemyAI : KSMonoBehaviour
 
     private Coroutine currentRoutine;
 
+    //Materials to highlight and revert objects
+    public Material highlightMaterial;
+    public Material defaultMaterial;
+
+    private List<Renderer> highlightedRenderers = new List<Renderer>();
+
     public enum State { Patrol, Chase, Attack }
     public State currentState;
 
@@ -64,9 +70,9 @@ public class EnemyAI : KSMonoBehaviour
         patrolPoints = ZoneManager.instance.GetPatrolPointsForZone(zoneName);
 
         if (patrolPoints == null || patrolPoints.Count == 0)
-            Debug.LogError($"No patrol points found for zone: {zoneName}");
+            if (verbose) Debug.LogError($"No patrol points found for zone: {zoneName}");
         else
-            Debug.Log($"Assigned {patrolPoints.Count} patrol points from zone: {zoneName}");
+            if (verbose) Debug.Log($"Assigned {patrolPoints.Count} patrol points from zone: {zoneName}");
 
         currentPatrolIndex = 0; // Reset patrol index when changing zone
     }
@@ -99,13 +105,13 @@ public class EnemyAI : KSMonoBehaviour
             //There are no points to patrol to
             if (patrolPoints == null || patrolPoints.Count == 0)
             {
-                Debug.LogError("Patrol points list is empty or null.");
+                if (verbose) Debug.LogError("Patrol points list is empty or null.");
                 yield break;
             }
              
             if (agent == null)
             {
-                Debug.LogError("NavMeshAgent is not initialized.");
+                if (verbose) Debug.LogError("NavMeshAgent is not initialized.");
                 yield break;
             }
 
@@ -152,27 +158,51 @@ public class EnemyAI : KSMonoBehaviour
         {
             yield return new WaitForSeconds(checkRate); //Wait for the specified check rate
 
-            if (currentState == State.Patrol && CanSeePlayer())
+            if (currentState == State.Patrol)
             {
-                if(!playerInSight) //Player was not previously in sight
+                CheckSightAndhighlightObjects();
+            }
+        }
+    }
+
+    private void CheckSightAndhighlightObjects()
+    {
+        //Clear previous highlights
+        ClearHighlightedObjects();
+
+        Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, sightRange, targetMask);
+
+        foreach (var target in targetsInViewRadius)
+        {
+            Transform targetTransform = target.transform;
+            Vector3 dirToTarget = (targetTransform.position - eyePosition.position).normalized;
+
+            if(Vector3.Angle(eyePosition.forward, dirToTarget) < fieldOfViewAngle / 2)
+            {
+                float dstToTarget = Vector3.Distance(eyePosition.position, targetTransform.position);
+
+                if (!Physics.Raycast(eyePosition.position, dirToTarget, dstToTarget, obstacleMask))
                 {
-                    playerInSight = true;
-                    EventManager.instance.PlayerSpotted();
-                }
-                else
-                {
-                    if(playerInSight) // Player was previously in sight
+                    //The Object is in sight, apply the highlight
+                    Renderer renderer = targetTransform.GetComponent<Renderer>();
+                    if(renderer != null)
                     {
-                        playerInSight = false;
-                        EventManager.instance.PlayerOutOfSight();
+                        renderer.material = highlightMaterial;
+                        highlightedRenderers.Add(renderer);
                     }
                 }
-                Debug.Log("Player in sight!");
-                //Here you can trigger the UI alert
-                UIManager.instance.DisplayAlert("Player is in sight!");
             }
-                    //EventManager.instance.ChangeAIState(State.Chase);
         }
+    }
+
+    private void ClearHighlightedObjects()
+    {
+        foreach (Renderer renderer in highlightedRenderers)
+        {
+            if (renderer != null)
+                renderer.material = defaultMaterial;
+        }
+        highlightedRenderers.Clear();
     }
 
     private bool CanSeePlayer()

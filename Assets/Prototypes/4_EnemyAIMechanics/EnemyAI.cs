@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -7,8 +8,14 @@ using UnityEngine.AI;
 public class EnemyAI : KSMonoBehaviour
 {
     [SerializeField]
+    public ZoneDatabase zoneDatabase; //Reference to the ScriptableObject containing zones
+
+    [SerializeField]
+    public string selectedZone; //The Zone selected from the dropdown
+
+    [SerializeField]
     [Tooltip("Points between which the enemy patrols")]
-    private Transform[] patrolPoints;
+    private List<Transform> patrolPoints;
     private int currentPatrolIndex = 0;
     private NavMeshAgent agent;
 
@@ -42,8 +49,26 @@ public class EnemyAI : KSMonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        if(agent == null)
+        {
+            Debug.LogError("NavMeshAgent Component is missing from this GameObject!");
+            return;
+        }
+        SetPatrolZone(selectedZone);
         EventManager.instance.ChangeAIState(State.Patrol);
         StartCoroutine(SightCheck());
+    }
+
+    private void SetPatrolZone(string zoneName)
+    {
+        patrolPoints = ZoneManager.instance.GetPatrolPointsForZone(zoneName);
+
+        if (patrolPoints == null || patrolPoints.Count == 0)
+            Debug.LogError($"No patrol points found for zone: {zoneName}");
+        else
+            Debug.Log($"Assigned {patrolPoints.Count} patrol points from zone: {zoneName}");
+
+        currentPatrolIndex = 0; // Reset patrol index when changing zone
     }
 
     private void SetState(State newState)
@@ -72,8 +97,17 @@ public class EnemyAI : KSMonoBehaviour
         while (true)
         {
             //There are no points to patrol to
-            if (patrolPoints.Length == 0)
-                yield return null;
+            if (patrolPoints == null || patrolPoints.Count == 0)
+            {
+                Debug.LogError("Patrol points list is empty or null.");
+                yield break;
+            }
+             
+            if (agent == null)
+            {
+                Debug.LogError("NavMeshAgent is not initialized.");
+                yield break;
+            }
 
             //Set the agent to go to the currently selected destination
             agent.destination = patrolPoints[currentPatrolIndex].position;
@@ -84,7 +118,7 @@ public class EnemyAI : KSMonoBehaviour
 
             //Choose the next point in the array as the destination,
             //cycling to the start if necessary
-            currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Length;
+            currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Count;
             yield return null;
 
             //Add a small delay if needed before moving to the next point

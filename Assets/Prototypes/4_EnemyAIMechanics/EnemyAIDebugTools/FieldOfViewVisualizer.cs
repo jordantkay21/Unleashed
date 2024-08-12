@@ -9,7 +9,7 @@ public class FieldOfViewVisualizer : MonoBehaviour
     private Mesh viewMesh;
 
     [SerializeField]
-    private bool debugMode = false;  // Toggle to enable/disable visualization
+    private bool debugMode = true;  // Toggle to enable/disable visualization
 
     [SerializeField]
     private int rayCount = 50;  // Number of rays to cast to create the FOV mesh

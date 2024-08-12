@@ -6979,6 +6979,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyAI
       objectReference: {fileID: 0}
+    - target: {fileID: 2300444098946310105, guid: f9e22f38e2e71dd4db800b30d7973063, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 3df7c0712412c0948b7babb3efb6efe6, type: 2}
+    - target: {fileID: 3598705192363560464, guid: f9e22f38e2e71dd4db800b30d7973063, type: 3}
+      propertyPath: debugMode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7778914366001150916, guid: f9e22f38e2e71dd4db800b30d7973063, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.000000009589478

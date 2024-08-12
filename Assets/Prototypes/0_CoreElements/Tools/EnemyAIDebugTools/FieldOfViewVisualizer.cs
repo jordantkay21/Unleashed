@@ -1,52 +1,81 @@
 using System;
 using UnityEngine;
 
-[RequireComponent(typeof(EnemyAI))]
+[RequireComponent(typeof(EnemyAI), typeof(MeshFilter), typeof(MeshRenderer))]
 public class FieldOfViewVisualizer : MonoBehaviour
 {
     private EnemyAI enemyAI;
+    private MeshFilter viewMeshFilter;
+    private Mesh viewMesh;
 
-    private void OnDrawGizmos()
+    [SerializeField]
+    private bool debugMode = false;  // Toggle to enable/disable visualization
+
+    [SerializeField]
+    private int rayCount = 50;  // Number of rays to cast to create the FOV mesh
+    [SerializeField]
+    private float meshResolution = 1f;  // Resolution of the mesh (size of triangles)
+
+    void Start()
     {
-        if (enemyAI == null)
-            enemyAI = GetComponent<EnemyAI>();
-
-        DrawFieldOfView();
+        enemyAI = GetComponent<EnemyAI>();
+        viewMeshFilter = GetComponent<MeshFilter>();
+        viewMesh = new Mesh();
+        viewMesh.name = "View Mesh";
+        viewMeshFilter.mesh = viewMesh;
+    }
+    void LateUpdate()
+    {
+        if (debugMode)
+        {
+            DrawFieldOfView();
+        }
+        else
+        {
+            viewMesh.Clear();
+        }
     }
 
     private void DrawFieldOfView()
     {
         if (enemyAI == null) return;
 
-        Gizmos.color = Color.yellow;
-
-        //Draw the range of sight as a wire sphere
-        Gizmos.DrawWireSphere(enemyAI.transform.position, enemyAI.sightRange);
-
-        //Calculate the edges of the field of view
+        // Calculate the edges of the field of view
         Vector3 forward = enemyAI.eyePosition.forward;
         Vector3 leftBoundary = Quaternion.Euler(0, -enemyAI.fieldOfViewAngle / 2, 0) * forward;
         Vector3 rightBoundary = Quaternion.Euler(0, enemyAI.fieldOfViewAngle / 2, 0) * forward;
 
-        //Number of segments to use for the FOV visualization
+        // Number of segments to use for the FOV visualization
         int segments = 20;
+        float angleStep = enemyAI.fieldOfViewAngle / segments;
 
+        // Create arrays for vertices and triangles
+        Vector3[] vertices = new Vector3[segments + 2]; // +2 for the center and the last vertex
+        int[] triangles = new int[segments * 3];
 
-        //Draw a filled arc for the FOV
-        for(int i=0; i < segments; i++)
+        // Set the first vertex at the center
+        vertices[0] = enemyAI.eyePosition.position - enemyAI.transform.position;
+
+        for (int i = 0; i <= segments; i++)
         {
-            float angle1 = -enemyAI.fieldOfViewAngle / 2 + (enemyAI.fieldOfViewAngle / segments) * i;
-            float angle2 = -enemyAI.fieldOfViewAngle / 2 + (enemyAI.fieldOfViewAngle / segments) * (i + 1);
+            float angle = -enemyAI.fieldOfViewAngle / 2 + angleStep * i;
+            Vector3 direction = Quaternion.Euler(0, angle, 0) * forward;
+            vertices[i + 1] = enemyAI.transform.InverseTransformPoint(enemyAI.eyePosition.position + direction * enemyAI.sightRange);
 
-            Vector3 point1 = Quaternion.Euler(0, angle1, 0) * forward * enemyAI.sightRange;
-            Vector3 point2 = Quaternion.Euler(0, angle2, 0) * forward * enemyAI.sightRange;
-
-            Gizmos.DrawLine(enemyAI.eyePosition.position, enemyAI.eyePosition.position + point1);
-            Gizmos.DrawLine(enemyAI.eyePosition.position + point1, enemyAI.eyePosition.position + point2);
-            Gizmos.DrawLine(enemyAI.eyePosition.position + point2, enemyAI.eyePosition.position);
+            if (i < segments)
+            {
+                // Define the triangles
+                int triangleIndex = i * 3;
+                triangles[triangleIndex] = 0;
+                triangles[triangleIndex + 1] = i + 1;
+                triangles[triangleIndex + 2] = i + 2;
+            }
         }
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(enemyAI.eyePosition.position, enemyAI.eyePosition.position + rightBoundary * enemyAI.sightRange);
-        Gizmos.DrawLine(enemyAI.eyePosition.position, enemyAI.eyePosition.position + leftBoundary * enemyAI.sightRange);
+
+        // Assign the vertices and triangles to the mesh
+        viewMesh.Clear();
+        viewMesh.vertices = vertices;
+        viewMesh.triangles = triangles;
+        viewMesh.RecalculateNormals();
     }
 }

@@ -339,31 +339,31 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 858493626466330525, guid: eb536c403799789499484889c192f98f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.55
+      value: 0.0727306
       objectReference: {fileID: 0}
     - target: {fileID: 858493626466330525, guid: eb536c403799789499484889c192f98f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.284
+      value: 9.05061
       objectReference: {fileID: 0}
     - target: {fileID: 858493626466330525, guid: eb536c403799789499484889c192f98f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 15.26709
+      value: -14.843554
       objectReference: {fileID: 0}
     - target: {fileID: 858493626466330525, guid: eb536c403799789499484889c192f98f, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0
+      value: 0.97237045
       objectReference: {fileID: 0}
     - target: {fileID: 858493626466330525, guid: eb536c403799789499484889c192f98f, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: 0.23332262
       objectReference: {fileID: 0}
     - target: {fileID: 858493626466330525, guid: eb536c403799789499484889c192f98f, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 1
+      value: 0.0072929217
       objectReference: {fileID: 0}
     - target: {fileID: 858493626466330525, guid: eb536c403799789499484889c192f98f, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0.0017499554
       objectReference: {fileID: 0}
     - target: {fileID: 858493626466330525, guid: eb536c403799789499484889c192f98f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -765,7 +765,7 @@ GameObject:
   - component: {fileID: 216340637}
   - component: {fileID: 216340636}
   m_Layer: 5
-  m_Name: UnDeterminedButton
+  m_Name: TBD Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1838,7 +1838,7 @@ GameObject:
   - component: {fileID: 679157281}
   - component: {fileID: 679157280}
   m_Layer: 5
-  m_Name: UnDeterminedButton
+  m_Name: TBD Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2301,7 +2301,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '
+  m_text: 'Patrol Overlook
 
 '
   m_isRightToLeft: 0
@@ -2330,13 +2330,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 12
-  m_fontSizeBase: 12
+  m_fontSize: 11.5
+  m_fontSizeBase: 11.5
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 1
   m_fontSizeMax: 72
-  m_fontStyle: 32
+  m_fontStyle: 33
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -2460,7 +2460,7 @@ GameObject:
   - component: {fileID: 976938202}
   - component: {fileID: 976938201}
   m_Layer: 5
-  m_Name: UnDeterminedButton
+  m_Name: PatrolOverlookButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2525,7 +2525,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 976938202}
   m_OnClick:
     m_PersistentCalls:
@@ -4385,6 +4385,7 @@ GameObject:
   - component: {fileID: 1449271217}
   - component: {fileID: 1449271216}
   - component: {fileID: 1449271215}
+  - component: {fileID: 1449271219}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -4477,6 +4478,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1449271219
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1449271214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b80bedf602ec0440af527d11b616fa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  aiDropdown: {fileID: 1128534790}
+  infoPanel: {fileID: 285625971}
+  overlookCamera: {fileID: 1580642715}
+  switchCameraButton: {fileID: 976938201}
 --- !u!1 &1464945757
 GameObject:
   m_ObjectHideFlags: 0
@@ -4699,6 +4716,81 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1573672509}
   m_CullTransparentMesh: 1
+--- !u!1 &1580642714
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1580642716}
+  - component: {fileID: 1580642715}
+  m_Layer: 0
+  m_Name: PatrolOverlookCamera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1580642715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1580642714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9dfa5b682dcd46bda6128250e975f58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Priority:
+    Enabled: 1
+    m_Value: 0
+  OutputChannel: 1
+  StandbyUpdate: 2
+  m_StreamingVersion: 20230301
+  m_LegacyPriority: 0
+  Target:
+    TrackingTarget: {fileID: 0}
+    LookAtTarget: {fileID: 0}
+    CustomLookAtTarget: 0
+  Lens:
+    FieldOfView: 60.000004
+    OrthographicSize: 10
+    NearClipPlane: 0.1
+    FarClipPlane: 5000
+    Dutch: 0
+    ModeOverride: 0
+    PhysicalProperties:
+      GateFit: 2
+      SensorSize: {x: 21.946, y: 16.002}
+      LensShift: {x: 0, y: 0}
+      FocusDistance: 10
+      Iso: 200
+      ShutterSpeed: 0.005
+      Aperture: 16
+      BladeCount: 5
+      Curvature: {x: 2, y: 11}
+      BarrelClipping: 0.25
+      Anamorphism: 0
+  BlendHint: 0
+--- !u!4 &1580642716
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1580642714}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.23332262, y: 0.0072929217, z: -0.0017499554, w: 0.97237045}
+  m_LocalPosition: {x: 0.0727306, y: 9.05061, z: -14.843554}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1645995430
 GameObject:
   m_ObjectHideFlags: 0
@@ -5085,7 +5177,7 @@ GameObject:
   - component: {fileID: 1706561716}
   - component: {fileID: 1706561715}
   m_Layer: 5
-  m_Name: UnDeterminedButton
+  m_Name: TBD Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5204,7 +5296,6 @@ GameObject:
   - component: {fileID: 1735219499}
   - component: {fileID: 1735219502}
   - component: {fileID: 1735219501}
-  - component: {fileID: 1735219500}
   m_Layer: 5
   m_Name: AgentInfoPanel
   m_TagString: Untagged
@@ -5234,20 +5325,6 @@ RectTransform:
   m_AnchoredPosition: {x: 7.7994385, y: 0}
   m_SizeDelta: {x: 271.6634, y: 295.501}
   m_Pivot: {x: 0, y: 1}
---- !u!114 &1735219500
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1735219498}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b80bedf602ec0440af527d11b616fa9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  aiDropdown: {fileID: 1128534790}
-  infoPanel: {fileID: 285625971}
 --- !u!114 &1735219501
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6121,3 +6198,4 @@ SceneRoots:
   - {fileID: 1363225737}
   - {fileID: 1449271218}
   - {fileID: 623982652}
+  - {fileID: 1580642716}

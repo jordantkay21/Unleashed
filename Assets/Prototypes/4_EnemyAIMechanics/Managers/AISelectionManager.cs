@@ -10,8 +10,13 @@ public class AISelectionManager : MonoBehaviour
     public TMP_Dropdown aiDropdown; //The dropdown menu for selecting AI Agents
     public TMP_Text infoPanel; //The UI Text element to display AI information
 
+    public CinemachineVirtualCameraBase overlookCamera; //Reference to the overlook camera
+    public Button switchCameraButton; // Ui button to switch between cameras
+
     private List<EnemyAI> aiAgents = new List<EnemyAI>(); // List of all AI Agents in the scene
     private EnemyAI selectedAI;
+
+    private bool isUsingOverlookCamera = false; //Track which camera is active
 
     [System.Obsolete]
     private void Start()
@@ -31,15 +36,38 @@ public class AISelectionManager : MonoBehaviour
         //Add listener to handle dropdown selection
         aiDropdown.onValueChanged.AddListener(OnAISelected);
 
+        //Add listener to the switch camera button
+        switchCameraButton.onClick.AddListener(SwitchCamera);
+
         //Set initial selection
         if (aiAgents.Count > 0)
             OnAISelected(0);
     }
 
+
     private void Update()
     {
         //Update the information each frame
         DisplayAIInformation();
+    }
+    private void SwitchCamera()
+    {
+        if (isUsingOverlookCamera)
+            ActivateAICamera(selectedAI);
+        else
+        {
+            overlookCamera.Priority = 10;
+
+            foreach (var agent in aiAgents)
+            {
+                var camera = agent.GetComponentInChildren<CinemachineVirtualCameraBase>();
+                if (camera != null)
+                    camera.Priority = 0;
+            }
+        }
+
+        isUsingOverlookCamera = true;
+        
     }
 
     private void OnAISelected(int index)

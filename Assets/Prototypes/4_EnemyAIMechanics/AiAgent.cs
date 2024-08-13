@@ -19,9 +19,10 @@ public class AiAgent : KSMonoBehaviour
     private int currentPatrolIndex = 0;
     private NavMeshAgent agent;
 
+    [SerializeField] private Transform spottedPlayer;
     [SerializeField] private LayerMask targetMask; //Layer on which the targets (e.g. player) resides
     [SerializeField] private LayerMask obstacleMask; //Layer on which the obstacles (e.g. walls) resides
-    [SerializeField] private float checkRate = 0.2f;
+    [SerializeField] public float checkRate = 0.2f;
     [SerializeField] public bool playerInSight;
 
     public float sightRange = 15f;
@@ -40,16 +41,6 @@ public class AiAgent : KSMonoBehaviour
     public State currentState;
 
 
-    private void OnEnable()
-    {
-        EventManager.instance.OnChangeAIState += SetState;
-    }
-
-    private void OnDisable()
-    {
-        EventManager.instance.OnChangeAIState -= SetState;
-    }
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -60,7 +51,7 @@ public class AiAgent : KSMonoBehaviour
             return;
         }
         SetPatrolZone(selectedZone);
-        EventManager.instance.ChangeAIState(State.Patrol);
+        SetState(State.Patrol);
         StartCoroutine(SightCheck());
     }
 
@@ -86,11 +77,11 @@ public class AiAgent : KSMonoBehaviour
         {
             case State.Patrol:
                 currentRoutine = StartCoroutine(Patrol());
-                break;
-                /*
+                break;         
             case State.Chase:
                 currentRoutine = StartCoroutine(Chase());
                 break;
+                /*
             case State.Attack:
                 currentRoutine = StartCoroutine(Attack());
                 break;
@@ -131,16 +122,27 @@ public class AiAgent : KSMonoBehaviour
         }
     }
 
-    /*
+    
     IEnumerator Chase()
     {
         while (true)
         {
-            agent.destination = playerTarget.position;
-            yield return null; // Continue updating the destination as long as the state doesn't change
+            if (agent == null || playerInSight == false || !playerInSight)
+                yield break;
+
+            //Set the agent to go to the player's position
+            agent.destination = spottedPlayer.position;
+
+            //Wait until the agent reaches the player's last known position
+            while (agent.pathPending || agent.remainingDistance > agent.stoppingDistance)
+                yield return null; // wait for the next frame
+            
+            yield return null;
         }
+
     }
 
+    /*
     IEnumerator Attack()
     {
         while (true)
@@ -157,10 +159,30 @@ public class AiAgent : KSMonoBehaviour
         {
             yield return new WaitForSeconds(checkRate); //Wait for the specified check rate
 
-            if (currentState == State.Patrol)
+            CheckSightAndhighlightObjects();
+
+            if (CanSeePlayer())
             {
-                CheckSightAndhighlightObjects();
+                if (!playerInSight)
+                {
+                    playerInSight = true;
+                    EventManager.instance.PlayerSpotted(); //Trigger an event when the player is spotted
+                                                           //Switch to the Chase state when the player is spotted
+                    SetState(State.Chase);
+                }
             }
+            else
+            {
+                if (playerInSight)
+                {
+                    playerInSight = false;
+                    spottedPlayer = null;
+                    EventManager.instance.PlayerOutOfSight(); // Trigger an event when the player is out of sight
+                                                              //Switch to the Patrol state when the player is out of sight
+                    SetState(State.Patrol);
+                }
+            }
+
         }
     }
 
@@ -189,6 +211,10 @@ public class AiAgent : KSMonoBehaviour
                         renderer.material = highlightMaterial;
                         highlightedRenderers.Add(renderer);
                     }
+
+                    //Check if the object is the player
+                    if (target.CompareTag("Player"))
+                        spottedPlayer = targetTransform; //Dynamically assign the player as the target
                 }
             }
         }
@@ -206,22 +232,19 @@ public class AiAgent : KSMonoBehaviour
 
     private bool CanSeePlayer()
     {
-        Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, sightRange, targetMask);
+        if (spottedPlayer == null)
+            return false;
 
-        foreach (var target in targetsInViewRadius)
+        Vector3 dirToTarget = (spottedPlayer.position - eyePosition.position).normalized;
+
+        if (Vector3.Angle(eyePosition.forward, dirToTarget) < fieldOfViewAngle / 2)
         {
-            Transform targetTransform = target.transform;
-            Vector3 dirToTarget = (targetTransform.position - eyePosition.position).normalized;
+            float dstToTarget = Vector3.Distance(eyePosition.position, spottedPlayer.position);
 
-            if (Vector3.Angle(eyePosition.forward, dirToTarget) < fieldOfViewAngle / 2)
-            {
-                float dstToTarget = Vector3.Distance(eyePosition.position, targetTransform.position);
-
-                if (!Physics.Raycast(eyePosition.position, dirToTarget, dstToTarget, obstacleMask))
-                    return true; //Player is visible
-            }
+            if (!Physics.Raycast(eyePosition.position, dirToTarget, dstToTarget, obstacleMask))
+                return true; //Player is visible
         }
-        
+
         return false;
     }
 }

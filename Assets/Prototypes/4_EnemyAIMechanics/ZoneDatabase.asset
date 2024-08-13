@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: ZoneDatabase
   m_EditorClassIdentifier: 
   availableZones:
-  - PatrolZone1
-  - PatrolZone2
-  - PatrolZone3
+  - PatrolZone
+  - ChaseZone
+  - AttackZone

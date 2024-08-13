@@ -1,19 +1,19 @@
 using System;
 using UnityEngine;
 
-[RequireComponent(typeof(EnemyAI), typeof(MeshFilter), typeof(MeshRenderer))]
+[RequireComponent(typeof(AiAgent), typeof(MeshFilter), typeof(MeshRenderer))]
 public class FieldOfViewVisualizer : MonoBehaviour
 {
-    private EnemyAI enemyAI;
+    private AiAgent enemyAI;
     private MeshFilter viewMeshFilter;
     private Mesh viewMesh;
 
     [SerializeField]
-    private bool debugMode = true;  // Toggle to enable/disable visualization
+    public bool debugMode = true;  // Toggle to enable/disable visualization
 
     void Start()
     {
-        enemyAI = GetComponent<EnemyAI>();
+        enemyAI = GetComponent<AiAgent>();
         viewMeshFilter = GetComponent<MeshFilter>();
         viewMesh = new Mesh();
         viewMesh.name = "View Mesh";

@@ -5,12 +5,12 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class EnemyAI : KSMonoBehaviour
+public class AiAgent : KSMonoBehaviour
 {
     [SerializeField]
     public ZoneDatabase zoneDatabase; //Reference to the ScriptableObject containing zones
 
-    [SerializeField]
+    [HideInInspector]
     public string selectedZone; //The Zone selected from the dropdown
 
     [SerializeField]
@@ -19,7 +19,6 @@ public class EnemyAI : KSMonoBehaviour
     private int currentPatrolIndex = 0;
     private NavMeshAgent agent;
 
-    [SerializeField] private Transform playerTarget; //The target player object
     [SerializeField] private LayerMask targetMask; //Layer on which the targets (e.g. player) resides
     [SerializeField] private LayerMask obstacleMask; //Layer on which the obstacles (e.g. walls) resides
     [SerializeField] private float checkRate = 0.2f;

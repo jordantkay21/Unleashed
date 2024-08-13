@@ -5,7 +5,7 @@ public class EventManager : MonoBehaviour
 {
     public static EventManager instance;
 
-    public event Action<EnemyAI.State> OnChangeAIState;
+    public event Action<AiAgent.State> OnChangeAIState;
     public event Action OnPlayerSpotted;
     public event Action OnPlayerLost;
 
@@ -19,7 +19,7 @@ public class EventManager : MonoBehaviour
             Destroy(gameObject);
 
     }
-    public void ChangeAIState(EnemyAI.State newState)
+    public void ChangeAIState(AiAgent.State newState)
     {
         OnChangeAIState?.Invoke(newState);
     }

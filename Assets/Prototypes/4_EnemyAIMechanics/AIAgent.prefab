@@ -50,7 +50,7 @@ GameObject:
   - component: {fileID: 4427256614203697713}
   - component: {fileID: 2300444098946310105}
   m_Layer: 0
-  m_Name: EnemyAI
+  m_Name: AIAgent
   m_TagString: EnemyAI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -132,7 +132,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   verbose: 0
   zoneDatabase: {fileID: 11400000, guid: 5b4963aaee0ea1545ab31e78be57885a, type: 2}
-  selectedZone: PatrolZone1
+  selectedZone: AttackZone
   patrolPoints: []
   playerTarget: {fileID: 0}
   targetMask:
@@ -1064,7 +1064,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4991557051114718739}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.0000000039713086, z: -0, w: -1}
+  m_LocalRotation: {x: 0, y: -0.000000044213763, z: 0, w: -1}
   m_LocalPosition: {x: 0.55, y: 2.1999998, z: -2.9599998}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

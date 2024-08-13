@@ -2,12 +2,12 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 
-[CustomEditor(typeof(EnemyAI))]
+[CustomEditor(typeof(AiAgent))]
 public class EnemyAIEditor : Editor
 {
     public override void OnInspectorGUI()
     {
-        EnemyAI enemyAI = (EnemyAI)target;
+        AiAgent enemyAI = (AiAgent)target;
 
 
         //Ensure the ZoneDatabase is assigned

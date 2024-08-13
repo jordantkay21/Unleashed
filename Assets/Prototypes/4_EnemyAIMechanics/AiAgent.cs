@@ -126,21 +126,44 @@ public class AiAgent : KSMonoBehaviour
     
     IEnumerator Chase()
     {
+        Vector3 lastKnownPosition = Vector3.zero;
+        bool isPlayerInSight = true;
+
         while (true)
         {
-            if (agent == null || playerInSight == false || !playerInSight)
-                yield break;
+            if (agent == null) yield break;
 
-            //Set the agent to go to the player's position
-            agent.destination = spottedPlayer.position;
 
-            //Wait until the agent reaches the player's last known position
-            while (agent.pathPending || agent.remainingDistance > agent.stoppingDistance)
-                yield return null; // wait for the next frame
-            
-            yield return null;
+            if (playerInSight)
+            {
+                //Update the last known position of the player while they are in sight
+                lastKnownPosition = spottedPlayer.position;
+
+                //Set the agent to go to the player's current position
+                agent.destination = lastKnownPosition;
+                isPlayerInSight = true;
+            }
+            else if (!playerInSight && isPlayerInSight)
+            {
+                //Player is out of sight, but the AI must continue to the last known position
+                isPlayerInSight = false;
+
+                //Set the agent to the last known position
+                agent.destination = lastKnownPosition;
+            }
+
+            //Wait until the agent reaches the last known position before returning to patrol
+            if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+            {
+                if (!playerInSight)
+                {
+                    //Player is not in sight, and the AI has reached the last known position
+                    SetState(State.Patrol); //Return to patrol state
+                    yield break; //End the coroutine
+                }
+            }
+        yield return null;
         }
-
     }
 
     /*

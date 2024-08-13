@@ -7,7 +7,7 @@ using Unity.Cinemachine;
 
 public class UIManager : MonoBehaviour
 {
-    public TMP_Dropdown aiDropdown; //The dropdown menu for selecting AI Agents
+    public List<AIButtonMapping> aiButtonMappings; 
     public TMP_Text infoPanel; //The UI Text element to display AI information
 
     public CinemachineVirtualCameraBase overlookCamera; //Reference to the overlook camera
@@ -16,6 +16,7 @@ public class UIManager : MonoBehaviour
 
     private List<AiAgent> aiAgents = new List<AiAgent>(); // List of all AI Agents in the scene
     private AiAgent selectedAI;
+    private AiAgent previousSelectedAI;
     private FieldOfViewVisualizer selectedFOV;
 
     private bool isUsingOverlookCamera = false; //Track which camera is active
@@ -23,20 +24,27 @@ public class UIManager : MonoBehaviour
     [System.Obsolete]
     private void Start()
     {
-        //Find all AI Agents in the scene and populate the dropdown
-        aiAgents.AddRange(FindObjectsOfType<AiAgent>());
+        //Assign each button's listener to its corresponding AI agent
+        foreach (var mapping in aiButtonMappings)
+        {
+            AiAgent agent = mapping.aiAgent; //Cache the agent reference for the button
+            mapping.aiButton.onClick.AddListener(() => OnAIButtonClicked(agent));
+        }
 
-        //populate the dropdown with AI names
-        aiDropdown.ClearOptions();
-        List<TMP_Dropdown.OptionData> options = new List<TMP_Dropdown.OptionData>();
+        ////Find all AI Agents in the scene and populate the dropdown
+        //aiAgents.AddRange(FindObjectsOfType<AiAgent>());
 
-        foreach (var ai in aiAgents)
-            options.Add(new TMP_Dropdown.OptionData(ai.name));
+        ////populate the dropdown with AI names
+        //for (int i = 0; i < aiButtons.Count; i++)
+        //{
+        //    //Cache the index for the button's delegate
+        //    int index = i; 
+        //    aiButtons[i].onClick.AddListener(() => OnAIButtonClicked(index));
+        //}
+        //List<TMP_Dropdown.OptionData> options = new List<TMP_Dropdown.OptionData>();
 
-        aiDropdown.AddOptions(options);
-
-        //Add listener to handle dropdown selection
-        aiDropdown.onValueChanged.AddListener(OnAISelected);
+        //foreach (var ai in aiAgents)
+        //    options.Add(new TMP_Dropdown.OptionData(ai.name));
 
         //Add listener to the switch camera button
         switchCameraButton.onClick.AddListener(SwitchCamera);
@@ -46,30 +54,39 @@ public class UIManager : MonoBehaviour
 
         //Set initial selection
         if (aiAgents.Count > 0)
-            OnAISelected(0);
+            OnAIButtonClicked(aiButtonMappings[0].aiAgent);
 
         UpdateSwitchCameraButtonText();
     }
-
 
     private void Update()
     {
         //Update the information each frame
         DisplayAIInformation();
     }
-    private void OnAISelected(int index)
+    private void OnAIButtonClicked(AiAgent agent)
     {
         //Set the selected AI based on the dropdown selection
-        selectedAI = aiAgents[index];
+        selectedAI = agent;
         selectedFOV = selectedAI.GetComponent<FieldOfViewVisualizer>();
-
-        //Activate the selected AI's camera
-        ActivateAICamera(selectedAI);
 
         if (selectedFOV != null)
         {
             sightToggle.isOn = selectedFOV.debugMode;
         }
+
+        //Update the selection indicator
+        if (previousSelectedAI != null && previousSelectedAI != selectedAI)
+            previousSelectedAI.SetSelected(false, isUsingOverlookCamera); //Disable the indicator on the previous AI
+
+        selectedAI.SetSelected(true, isUsingOverlookCamera); //Enable the indicator on the newly selected AI if overlook camera is active
+
+        //Remember the current selected AI as the previous one for the next selection
+        previousSelectedAI = selectedAI;
+
+        //Only switch the camera if we are not using the overlook camera
+        if(!isUsingOverlookCamera)
+            ActivateAICamera(selectedAI);
     }
     private void SwitchCamera()
     {
@@ -81,12 +98,17 @@ public class UIManager : MonoBehaviour
             //Update the toggle state
             isUsingOverlookCamera = false; //Make sure this flag is set to false when switching to the AI camera
 
+            //Update button Text
+            UpdateSwitchCameraButtonText();
+
+            //Update the selection indicator state (disable)
+            if (selectedAI != null)
+                selectedAI.SetSelected(true, isUsingOverlookCamera);
+            if (previousSelectedAI != null && previousSelectedAI != selectedAI)
+                previousSelectedAI.SetSelected(false, isUsingOverlookCamera);
         }
         else
         {
-            //Switch to the overlook Camera
-            overlookCamera.Priority = 10;
-
             //Deactivate the selected AI's camera
             foreach (var agent in aiAgents)
             {
@@ -95,16 +117,22 @@ public class UIManager : MonoBehaviour
                     camera.Priority = 0;
             }
 
+            //Switch to the overlook Camera
+            overlookCamera.Priority = 10;
+
             //Update the toggle state
             isUsingOverlookCamera = true;
+
+            //Update button Text
+            UpdateSwitchCameraButtonText();
+
+            //Update the selection indicator state (enable)
+            if (selectedAI != null)
+                selectedAI.SetSelected(true, isUsingOverlookCamera);
+            if (previousSelectedAI != null && previousSelectedAI != selectedAI)
+                previousSelectedAI.SetSelected(true, isUsingOverlookCamera);
         }
-
-        //Update button Text
-        UpdateSwitchCameraButtonText();
     }
-
-
-
     private void DisplayAIInformation()
     {
         if (selectedAI != null)
@@ -121,9 +149,9 @@ public class UIManager : MonoBehaviour
     private void ActivateAICamera(AiAgent selectedAI)
     {
         //Deactivate all AI cameras first
-        foreach (var agent in aiAgents)
+        foreach (var mapping in aiButtonMappings)
         {
-            var camera = agent.GetComponentInChildren<CinemachineVirtualCameraBase>();
+            var camera = mapping.aiAgent.GetComponentInChildren<CinemachineVirtualCameraBase>();
             if (camera != null)
                 camera.Priority = 0;
             else
@@ -134,6 +162,8 @@ public class UIManager : MonoBehaviour
         var selectedCamera = selectedAI.GetComponentInChildren<CinemachineVirtualCameraBase>();
         if (selectedCamera != null)
             selectedCamera.Priority = 10;
+
+        overlookCamera.Priority = 0;
     }
     private void OnSightToggleChanged(bool isOn)
     {

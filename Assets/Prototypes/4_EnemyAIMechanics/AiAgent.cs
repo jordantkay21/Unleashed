@@ -19,6 +19,7 @@ public class AiAgent : KSMonoBehaviour
     private int currentPatrolIndex = 0;
     private NavMeshAgent agent;
 
+    [SerializeField] GameObject selectionIndicator;
     [SerializeField] private Transform spottedPlayer;
     [SerializeField] private LayerMask targetMask; //Layer on which the targets (e.g. player) resides
     [SerializeField] private LayerMask obstacleMask; //Layer on which the obstacles (e.g. walls) resides
@@ -246,5 +247,11 @@ public class AiAgent : KSMonoBehaviour
         }
 
         return false;
+    }
+
+    public void SetSelected(bool isSelected, bool isOverlookCameraActive)
+    {
+        if (selectionIndicator != null)
+            selectionIndicator.SetActive(isSelected && isOverlookCameraActive);
     }
 }
